@@ -31,7 +31,12 @@ public class HotelController {
 		return hotelService.getHotel(hotel_id);
 	}
 	
-	
+	//DELETE
+	@RequestMapping(value = "hotel/delete/{hotel_id}", method = RequestMethod.DELETE)
+	public void deleteHotel(@PathVariable int hotel_id) {
+		hotelService.deleteHotel(hotel_id);
+	}
+
 	
 	//POST 
 	@RequestMapping(value="hotel/save", method = RequestMethod.POST)

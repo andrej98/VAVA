@@ -33,4 +33,8 @@ public class HotelService {
 	public void saveHotel(Hotel hotel) {
 		hotelR.save(hotel);		
 	}
+
+	public void deleteHotel(int hotel_id) {
+		hotelR.deleteById(hotel_id);
+	}
 }
