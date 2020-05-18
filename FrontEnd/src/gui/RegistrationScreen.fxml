@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="650.0" prefWidth="888.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.RegistrationScreen">
+   <children>
+      <RadioButton fx:id="guestRB" layoutX="38.0" layoutY="62.0" mnemonicParsing="false" selected="true" text="%guestRB">
+         <toggleGroup>
+            <ToggleGroup fx:id="tg" />
+         </toggleGroup></RadioButton>
+      <RadioButton fx:id="managerRB" layoutX="158.0" layoutY="62.0" mnemonicParsing="false" text="%managerRB" toggleGroup="$tg" />
+      <Label layoutX="38.0" layoutY="34.0" prefHeight="17.0" prefWidth="124.0" text="%registerAs" />
+      <TextField fx:id="fnameTB" layoutX="38.0" layoutY="108.0" />
+      <TextField fx:id="lnameTB" layoutX="37.0" layoutY="166.0" />
+      <TextField fx:id="addressTB" layoutX="259.0" layoutY="108.0" />
+      <TextField fx:id="emailTB" layoutX="259.0" layoutY="166.0" />
+      <PasswordField fx:id="passwordTB" layoutX="259.0" layoutY="226.0" />
+      <Label layoutX="38.0" layoutY="91.0" text="%fname" />
+      <Label layoutX="38.0" layoutY="149.0" text="%lname" />
+      <Label layoutX="38.0" layoutY="209.0" text="%bdate" />
+      <Label layoutX="38.0" layoutY="268.0" text="%genderL" />
+      <Label layoutX="259.0" layoutY="91.0" text="%addressC" />
+      <Label layoutX="259.0" layoutY="149.0" text="%emailL" />
+      <Label layoutX="259.0" layoutY="209.0" text="%passwordL" />
+      <Button fx:id="registerB" layoutX="38.0" layoutY="349.0" mnemonicParsing="false" onAction="#registerClick" text="%registerB" />
+      <Button fx:id="backB" layoutX="124.0" layoutY="349.0" mnemonicParsing="false" onAction="#backClick" text="%backB" />
+      <DatePicker fx:id="bdateTB" layoutX="37.0" layoutY="226.0" />
+      <ChoiceBox fx:id="genderTB" layoutX="37.0" layoutY="285.0" prefWidth="150.0" />
+   </children>
+</AnchorPane>
