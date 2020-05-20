@@ -37,6 +37,7 @@ public class Hotel {
 		this.city = city;
 		this.country = country;
 	}
+	
 
 
 

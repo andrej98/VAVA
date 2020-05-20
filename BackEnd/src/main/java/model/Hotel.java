@@ -57,6 +57,8 @@ public class Hotel {
 		this.country = country;
 		this.manager_id = manager;
 	}
+	
+	
 
 	@JsonIgnore
 	public HotelManager getManager_id() {

@@ -124,11 +124,7 @@ public class RegistrationScreen {
         		a.setContentText(Main.bundle.getString("confirmReg"));
         		a.showAndWait();
         		
-    			Parent root = FXMLLoader.load(RegistrationScreen.class.getResource("/gui/HomeScreen.fxml"),Main.bundle);
-    			Scene registerScene = new Scene(root);
-    			Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
-    			window.setScene(registerScene);
-    			window.show();
+    			this.backClick(event);
     			
             	
         	} catch(IOException e) {

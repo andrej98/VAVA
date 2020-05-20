@@ -87,5 +87,8 @@ public class Customer {
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
 	}
+	public String getName() {
+		return this.first_name + " " + this.last_name;
+	}
 	
 }

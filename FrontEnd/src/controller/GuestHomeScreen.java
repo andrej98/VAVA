@@ -1,20 +1,30 @@
 package controller;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import java.util.logging.Logger;
 
-import javafx.beans.property.SimpleIntegerProperty;
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import gui.ObserverLabel;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -28,13 +38,15 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Customer;
+import model.Hotel;
+import model.Room;
 
 
 /**
  * @author Andrej
  * obrazovka customera, vidi zoznam vsetkych hotelov a moze medzi nimi filtrovat
  */
-public class GuestHomeScreen implements Initializable{
+public class GuestHomeScreen {
 
     @FXML
     private Button logoutB;
@@ -43,19 +55,19 @@ public class GuestHomeScreen implements Initializable{
     @FXML
     private Label text1;
     @FXML
-    private TableView<?> table;
+    private TableView<Hotel> table;
     @FXML
-    private TableColumn<?, SimpleIntegerProperty> roomsC;
+    private TableColumn<Hotel, SimpleIntegerProperty> roomsC;
     @FXML
-    private TableColumn<?, String> nameC;
+    private TableColumn<Hotel, String> nameC;
     @FXML
-    private TableColumn<?, String> addressC;
+    private TableColumn<Hotel, String> addressC;
     @FXML
-    private TableColumn<?, String> cityC;
+    private TableColumn<Hotel, String> cityC;
     @FXML
-    private TableColumn<?, String> countryC;
+    private TableColumn<Hotel, String> countryC;
     @FXML
-    private TableColumn<?, SimpleIntegerProperty> starsC;  
+    private TableColumn<Hotel, SimpleIntegerProperty> starsC;  
     @FXML
     private Button filterB;
     @FXML
@@ -82,8 +94,8 @@ public class GuestHomeScreen implements Initializable{
     private Spinner<Integer> bedsS;
     @FXML
     private Label text8;
-//    @FXML
-//    private ObserverLabel observerLabel;
+    @FXML
+    private ObserverLabel observerLabel;
     @FXML
     private Spinner<Integer> priceS;
     @FXML
@@ -91,23 +103,30 @@ public class GuestHomeScreen implements Initializable{
     @FXML
     private Button reservationsB;
 
-//    //list kde su aktualne data v table
-//    private ObservableList<Hotel> filterList;
-//    //original list mam stale k dispozicii, ked dam vycistit filter, nech sa nerobi narocna query znova
-//    private static ObservableList<Hotel> originalList;
+    //list kde su aktualne data v table
+    private ObservableList<Hotel> filterList;
+    //original list mam stale k dispozicii, ked dam vycistit filter, nech sa nerobi narocna query znova
+    private static ObservableList<Hotel> originalList;
     private int pocetHotelov;
 
 
-    private Customer c;
+    private Customer customer;
     private List<GuestHomeObserver> sledovatelia = new ArrayList<GuestHomeObserver>();
 	private final static Logger LOG = Logger.getLogger(GuestHomeScreen.class.getName());
 
  	
 	
-	public void init(Customer c) {
-    	this.c=c;
+	public void init(Customer c,List<Hotel> list) throws JsonParseException, JsonMappingException, IOException {
+    	this.customer=c;   	
     	
+    	starsS.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,5));
+        bedsS.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,15));
         
+    	originalList = FXCollections.observableArrayList(list);
+    	this.filterList = FXCollections.observableArrayList(list);
+
+     	text1.setText(c.getName());
+    	
         roomsC.setCellValueFactory(new PropertyValueFactory<>("rooms_count"));
         nameC.setCellValueFactory(new PropertyValueFactory<>("hotel_name"));
         addressC.setCellValueFactory(new PropertyValueFactory<>("address"));
@@ -115,9 +134,35 @@ public class GuestHomeScreen implements Initializable{
         countryC.setCellValueFactory(new PropertyValueFactory<>("country"));
         starsC.setCellValueFactory(new PropertyValueFactory<>("stars"));
 
+        this.pocetHotelov = list.size();
+    	pridajSledovatela(observerLabel);
+    	upovedomSledovatelov(pocetHotelov);
         
-//        table.setItems(filterList);
+        table.setItems(filterList);
         table.getSelectionModel().selectFirst();
+	}
+	
+	public void init(Customer c) {
+		this.customer=c;	
+    	this.filterList = FXCollections.observableArrayList(originalList);
+    	text1.setText(c.getName());
+    	
+        roomsC.setCellValueFactory(new PropertyValueFactory<>("rooms_count"));
+        nameC.setCellValueFactory(new PropertyValueFactory<>("hotel_name"));
+        addressC.setCellValueFactory(new PropertyValueFactory<>("address"));
+        cityC.setCellValueFactory(new PropertyValueFactory<>("city"));
+        countryC.setCellValueFactory(new PropertyValueFactory<>("country"));
+        starsC.setCellValueFactory(new PropertyValueFactory<>("stars"));
+
+        this.pocetHotelov = filterList.size();
+    	pridajSledovatela(observerLabel);
+    	upovedomSledovatelov(pocetHotelov);
+        
+        table.setItems(filterList);
+        table.getSelectionModel().selectFirst();
+        
+        starsS.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,5));
+        bedsS.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,15));
 	}
       
 	//metody observera
@@ -132,9 +177,74 @@ public class GuestHomeScreen implements Initializable{
      
 	//filtrovanie hotelov, prazdne policka ignoruje
     @FXML
-    void filterClick(ActionEvent event) {
+    void filterClick(ActionEvent event) throws JsonParseException, JsonMappingException, IOException {
     	
-    	
+    	if(nameTF.getText().isEmpty() && cityTB.getText().isEmpty() && countryTB.getText().isEmpty() && starsS.getValue() == 0
+    			&& priceS.getValue() == 0 && bedsS.getValue() == 0) {
+    		filterList = FXCollections.observableArrayList(originalList);
+            table.setItems(filterList);
+    	}
+    	else {
+
+	    	StringBuilder sb = new StringBuilder(Main.prop.getProperty("REMOTE"));
+	    	sb.append("/hotels/?");
+	    	if(!nameTF.getText().isEmpty()) {
+	    		sb.append("hotel_name=").append(nameTF.getText());
+	    	}
+	    	if(!countryTB.getText().isEmpty()) {
+	    		sb.append("&country=").append(countryTB.getText());
+	    	}
+	    	if(!cityTB.getText().isEmpty()) {
+	    		sb.append("&city=").append(cityTB.getText());
+	    	}
+	    	if(priceS.getValue() != 0) {
+	    		sb.append("&price=").append(priceS.getValue().toString());
+	    	}
+	    	if(bedsS.getValue() != 0) {
+	    		sb.append("&beds=").append(bedsS.getValue().toString());
+	    	}
+	    	if(starsS.getValue() != 0) {
+	    		sb.append("&stars=").append(starsS.getValue().toString());
+	    	}
+	    	sb = new StringBuilder(sb.toString().replaceAll(" ", "%20"));
+	    	
+	    	filterList.clear();
+	    	
+	    	URL url = new URL(sb.toString());
+			HttpURLConnection conn = null;
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setUseCaches(false);
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			conn.setRequestMethod("GET");
+			
+			conn.getInputStream();
+			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	    	
+			JsonFactory fac2 = new JsonFactory();
+			JsonParser jp2 = fac2.createParser(in);
+			Hotel[] arr = new ObjectMapper().readValue(jp2, Hotel[].class);
+			filterList =  FXCollections.observableArrayList(Arrays.asList(arr));
+
+			for (Hotel hotel : filterList) {
+				int count = 0;
+				for(Room room : hotel.getRooms()) {
+					if(priceS.getValue() != 0 ) {
+						if(room.getPrice()<=priceS.getValue())
+							count++;
+					}
+					else
+						count++;
+				}
+				hotel.setRooms_count(count);
+			}
+			
+            table.setItems(filterList);
+
+		
+    	}
+    	table.getSelectionModel().selectFirst();
+    	pocetHotelov = filterList.size();
     	upovedomSledovatelov(pocetHotelov);
     }
   
@@ -161,7 +271,7 @@ public class GuestHomeScreen implements Initializable{
     	loader.setResources(Main.bundle);
     	Parent root=loader.load();
     	GuestReservationsScreen m = loader.getController();
-		m.init(this.c);		
+		m.init(this.customer);		
 		Scene login = new Scene(root);  			
 		Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
 		window.setScene(login);
@@ -171,14 +281,15 @@ public class GuestHomeScreen implements Initializable{
     //vymaze filter a vycisti polia na filtrovanie
     @FXML 
     void unfilterClick(ActionEvent event) {
-    	
+    	filterList = FXCollections.observableArrayList(originalList);
+        table.setItems(filterList);
+        nameTF.clear();
+        cityTB.clear();
+        countryTB.clear();
+        starsS.getValueFactory().setValue(0);
+        priceS.getValueFactory().setValue(0);
+        bedsS.getValueFactory().setValue(0);
+    	table.getSelectionModel().selectFirst();
+        upovedomSledovatelov(filterList.size());
     }
-
-	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		
-		
-       starsS.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,5));
-       bedsS.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0,15));
- 	}
 }

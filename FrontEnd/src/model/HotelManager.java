@@ -20,6 +20,10 @@ public class HotelManager {
 	public HotelManager(){
 	}
 	
+	public HotelManager(int manager_id){
+		this.manager_id=manager_id;
+	}
+	
 	public HotelManager(String first_name, String last_name, String email, String password, Date birth_date,
 			char gender, String address) {
 		super();

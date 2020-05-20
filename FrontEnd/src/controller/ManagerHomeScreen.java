@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Logger;
 
@@ -173,22 +174,39 @@ public class ManagerHomeScreen {
     //otvori sa okno s detailmi o vybranom hoteli
     @FXML
     void selectClick(ActionEvent event) throws IOException {
-    	Hotel selected = table.getSelectionModel().getSelectedItem();
-    	
-    	FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SelectHotelScreen.fxml"));
-    	loader.setResources(Main.bundle);
-		Parent root = loader.load();
-		SelectHotelScreen a = loader.getController();
-		a.init(selected,manager);
-		Scene registerScene = new Scene(root);
-		Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
-		window.setScene(registerScene);
-		window.show();
+    	if(!hotels.isEmpty()) {
+    		Hotel selected = table.getSelectionModel().getSelectedItem();
+        	
+        	FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/SelectHotelScreen.fxml"));
+        	loader.setResources(Main.bundle);
+    		Parent root = loader.load();
+    		SelectHotelScreen a = loader.getController();
+    		a.init(selected,manager);
+    		Scene registerScene = new Scene(root);
+    		Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
+    		window.setScene(registerScene);
+    		window.show();
+    	}
     }
 
     //otvori sa okno editacie zvoleneho hotela
     @FXML
-    void editClick(ActionEvent event) throws SQLException, IOException {
+    void editClick(ActionEvent event) throws IOException {
+    	if(!hotels.isEmpty()) {
+    		Hotel selected = table.getSelectionModel().getSelectedItem();
+    		
+    		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/EditHotelScreen.fxml"));
+        	loader.setResources(Main.bundle);
+    		Parent root=loader.load();
+
+        	EditHotelScreen m = loader.getController();
+    		m.init(selected, this.manager);
+    		
+    		Scene login = new Scene(root);  			
+    		Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
+    		window.setScene(login);
+    		window.show();
+        }
     	
     }
     

@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
@@ -18,7 +21,12 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.animation.FadeTransition;
+import javafx.collections.FXCollections;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
+import javafx.concurrent.WorkerStateEvent;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -39,6 +47,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import model.Customer;
 import model.HotelManager;
+import model.Hotel;
 
 
 /**
@@ -67,6 +76,8 @@ public class HomeScreen implements Initializable{
     private RadioButton managerRB;
     @FXML
     private ComboBox<String> langCB;
+    
+	private static List<Hotel> list;
 
     
 	private final static Logger LOG = Logger.getLogger(HomeScreen.class.getName());
@@ -150,7 +161,7 @@ public class HomeScreen implements Initializable{
 
 	    			Parent root=loader.load();
 	    			GuestHomeScreen m = loader.getController();
-	    			m.init(cus);
+	    			m.init(cus,list);
 	   
 	    			Scene login = new Scene(root);  			
 	    			Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -177,7 +188,7 @@ public class HomeScreen implements Initializable{
     	Parent pane =FXMLLoader.load(getClass().getResource("/gui/LoadingScreen.fxml"),Main.bundle);
     	mainPane.getChildren().setAll(pane);
     	
-    	FadeTransition fade = new FadeTransition(Duration.seconds(3),pane);
+    	FadeTransition fade = new FadeTransition(Duration.seconds(5),pane);
     	fade.setFromValue(1);
     	fade.setToValue(0);
     	fade.setCycleCount (1);
@@ -229,12 +240,65 @@ public class HomeScreen implements Initializable{
     	this.langCB.getItems().addAll("EN","SK");
     	mailTF.setText("a@gmail.com");
     	hesloTF.setText("a");
+    	
+    	Service<Void> thread = new Service<Void>() {
+
+			@Override
+			protected Task<Void> createTask() {
+				return new Task<Void>() {
+
+					@Override
+					protected Void call() throws Exception {
+						URL url = new URL(Main.prop.getProperty("REMOTE")+"/allHotels");
+						HttpURLConnection conn = null;
+						conn = (HttpURLConnection) url.openConnection();
+						conn.setUseCaches(false);
+						conn.setDoInput(true);
+						conn.setDoOutput(true);
+						conn.setRequestMethod("GET");
+						
+						conn.getInputStream();
+						BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+				    	
+						JsonFactory fac2 = new JsonFactory();
+						JsonParser jp2 = fac2.createParser(in);
+						Hotel[] arr = new ObjectMapper().readValue(jp2, Hotel[].class);
+						list =  FXCollections.observableArrayList(Arrays.asList(arr));
+
+						for (Hotel hotel : list) {
+							hotel.setRooms_count(hotel.getRooms().size());
+						}
+						
+						Iterator<Hotel> iter = list.iterator();
+				    	while(iter.hasNext()) {
+				    		if(iter.next().getRooms_count()==0)
+				    			iter.remove();
+				    	}
+						
+											
+						return null;
+					}
+				};
+			}
+        };
+        
+        thread.setOnSucceeded(new EventHandler<WorkerStateEvent>() {
+
+			@Override
+			public void handle(WorkerStateEvent arg0) {
+				LOG.info("Loading finished");
+			}
+        	
+        });
+          	
+    	
         if(Main.firstLaunch) {
         	try {
 				loadingScreen();
 			} catch (IOException e) {
 	    		LOG.log(Level.SEVERE, "Zla cesta k suboru", e);
 			}
+        	thread.start();
         }
         
     }

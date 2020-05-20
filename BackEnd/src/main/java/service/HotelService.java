@@ -4,9 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import org.hibernate.criterion.Example;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties.Pageable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import model.Customer;
 import model.Hotel;
 import repository.HotelRepository;
 
@@ -37,4 +42,20 @@ public class HotelService {
 	public void deleteHotel(int hotel_id) {
 		hotelR.deleteById(hotel_id);
 	}
+
+	public void updateHotel(Hotel hotel) {
+		hotelR.save(hotel);
+	}
+	
+	public String ret() {
+		return "NULL";
+	}
+
+	public List<Hotel> filter(Optional<String> hotel_name, Optional<String> city, Optional<String> country,
+	 Optional<Integer> price, Optional<Integer> beds, Optional<Integer> stars ) {
+		return hotelR.filter(hotel_name.orElse("_"), city.orElse("_"),
+				country.orElse("_") ,price.orElse(0),beds.orElse(0),stars.orElse(0) );
+	}
+
+	
 }
