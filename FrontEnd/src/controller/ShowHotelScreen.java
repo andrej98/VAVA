@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.logging.Logger;
 
 import javafx.beans.property.SimpleIntegerProperty;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +19,8 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.Customer;
+import model.Hotel;
+import model.Room;
 
 
 /**
@@ -37,15 +40,15 @@ public class ShowHotelScreen {
     @FXML
     private Label countryL;
     @FXML
-    private TableView<?> table;
+    private TableView<Room> table;
     @FXML
-    private TableColumn<?, SimpleIntegerProperty> bedsC;
+    private TableColumn<Room, SimpleIntegerProperty> bedsC;
     @FXML
-    private TableColumn<?, SimpleIntegerProperty> priceC;
+    private TableColumn<Room, SimpleIntegerProperty> priceC;
     @FXML
-    private TableColumn<?, String> heatingC;
+    private TableColumn<Room, String> heatingC;
     @FXML
-    private TableColumn<?, String> bathroomC;
+    private TableColumn<Room, String> bathroomC;
     @FXML
     private Label unameL;
     @FXML
@@ -55,18 +58,16 @@ public class ShowHotelScreen {
     @FXML
     private Label text;
     
+    private ObservableList<Room> rooms = FXCollections.observableArrayList();
 	private final static Logger LOG = Logger.getLogger(ShowHotelScreen.class.getName());
-    private int hotel_id;
-    private Customer c;
+    private Hotel hotel;
+    private Customer customer;
 
     //inicializacia obrazovky
-    public void init(int hotel_id, Customer c) {
-    	
-        
-        this.hotel_id = hotel_id;
-        this.c = c;
-        
-        
+    public void init(Hotel hotel, Customer c) { 
+        this.hotel = hotel;
+        this.customer = c;
+                
         table.getSelectionModel().selectFirst();
         
         priceC.setCellValueFactory(new PropertyValueFactory<>("price"));
@@ -84,7 +85,7 @@ public class ShowHotelScreen {
     	Parent root=loader.load();
 
     	GuestHomeScreen m = loader.getController();
-		m.init(this.c);
+		m.init(this.customer);
 		
 		Scene login = new Scene(root);  			
 		Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -96,17 +97,18 @@ public class ShowHotelScreen {
     //otvori sa okno na rezervaciu zvolenej izby
     @FXML
     void reservationClick(ActionEvent event) throws IOException {
-    	
-    		
+    	if(!rooms.isEmpty()) {
+    		Room selected = table.getSelectionModel().getSelectedItem();
+
         	FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/MakeReservationScreen.fxml"));
     		loader.setResources(Main.bundle);
         	Parent root = loader.load();
     		MakeReservationScreen a = loader.getController();
-    		//a.init(id, this.currentUser, this.hotel_id);;
+    		a.init(selected, this.customer, this.hotel);;
     		Scene registerScene = new Scene(root);
     		Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
     		window.setScene(registerScene);
     		window.show();
-    	
+    	}
     }
 }

@@ -17,6 +17,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import model.Customer;
+import model.Hotel;
+import model.Room;
 
 /**
  * @author Andrej
@@ -35,13 +37,13 @@ public class MakeReservationScreen {
     @FXML
     private Button reservationB;
     
-    private int hotel_id;
-    private int room_id;
+    private Hotel hotel_id;
+    private Room room_id;
     private Customer c;
 	private final static Logger LOG = Logger.getLogger(MakeReservationScreen.class.getName());
 
     //inicializacia obrazovky
-    public void init(int room_id, Customer c, int hotel_id) {
+    public void init(Room room_id, Customer c, Hotel hotel_id) {
     	this.room_id=room_id;
     	this.c=c;
     	this.hotel_id = hotel_id;

@@ -20,7 +20,7 @@ public class Hotel {
 	
 	
 	
-	public Hotel(String hotel_name, String address, int stars, String city, String country, HotelManager manager) {
+	public Hotel(int hotel_id,String hotel_name, String address, int stars, String city, String country, HotelManager manager,int rooms_count) {
 		super();
 		this.hotel_name = hotel_name;
 		this.address = address;
@@ -28,6 +28,8 @@ public class Hotel {
 		this.city = city;
 		this.country = country;
 		this.manager = manager;
+		this.rooms_count = rooms_count;
+		this.hotel_id = hotel_id;
 	}
 
 	public Hotel(String hotel_name, String address, int stars, String city, String country) {
@@ -39,7 +41,15 @@ public class Hotel {
 	}
 	
 
-
+	public Hotel(String hotel_name, String address, int stars, String city, String country, HotelManager manager) {
+		super();
+		this.hotel_name = hotel_name;
+		this.address = address;
+		this.stars = stars;
+		this.city = city;
+		this.country = country;
+		this.manager = manager;
+	}
 
 	public int getHotel_id() {
 		return hotel_id;

@@ -8,7 +8,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import java.util.logging.Logger;
 
@@ -229,12 +228,15 @@ public class GuestHomeScreen {
 			for (Hotel hotel : filterList) {
 				int count = 0;
 				for(Room room : hotel.getRooms()) {
-					if(priceS.getValue() != 0 ) {
-						if(room.getPrice()<=priceS.getValue())
-							count++;
-					}
-					else
+					if((priceS.getValue() != 0 && room.getPrice()<=priceS.getValue()) && (bedsS.getValue() != 0 && room.getBeds()==bedsS.getValue())) 
 						count++;
+					else if(priceS.getValue() ==0 && bedsS.getValue() == 0)
+						count++;
+					else if(priceS.getValue() == 0 && bedsS.getValue() != 0 && bedsS.getValue()==room.getBeds())
+						count++;
+					else if(bedsS.getValue() == 0 && priceS.getValue() != 0 && priceS.getValue()>=room.getPrice())
+						count++;
+				
 				}
 				hotel.setRooms_count(count);
 			}
@@ -261,7 +263,22 @@ public class GuestHomeScreen {
     //otvori sa obrazovka s detailmi o hoteli ktory bol zvoleny
     @FXML
     void selectClick(ActionEvent event) throws IOException {
+    	if(!filterList.isEmpty()) {
+    		Hotel selected = table.getSelectionModel().getSelectedItem();
+        	FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ShowHotelScreen.fxml"));
+        	loader.setResources(Main.bundle);
+        	        		            		
+			Parent root=loader.load();
+
+			ShowHotelScreen m = loader.getController();
+			m.init(selected, this.customer);
+			
+			Scene login = new Scene(root);  			
+			Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
+			window.setScene(login);
+			window.show();
     		
+    	}	
     }
     
     //otvori sa obrazovka rezervacii

@@ -4,6 +4,7 @@ package controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
@@ -173,7 +174,7 @@ public class HomeScreen implements Initializable{
 	    		a.setTitle(Main.bundle.getString("error"));
 	    		a.setContentText(Main.bundle.getString("loginError"));
 	    		a.showAndWait();
-				LOG.log(Level.SEVERE, "Chyba pri prihlaseni", e);;
+				LOG.log(Level.SEVERE, "Chyba pri prihlaseni", e);
 			}
 			
     	}
@@ -188,7 +189,7 @@ public class HomeScreen implements Initializable{
     	Parent pane =FXMLLoader.load(getClass().getResource("/gui/LoadingScreen.fxml"),Main.bundle);
     	mainPane.getChildren().setAll(pane);
     	
-    	FadeTransition fade = new FadeTransition(Duration.seconds(5),pane);
+    	FadeTransition fade = new FadeTransition(Duration.seconds(6),pane);
     	fade.setFromValue(1);
     	fade.setToValue(0);
     	fade.setCycleCount (1);
@@ -248,22 +249,27 @@ public class HomeScreen implements Initializable{
 				return new Task<Void>() {
 
 					@Override
-					protected Void call() throws Exception {
-						URL url = new URL(Main.prop.getProperty("REMOTE")+"/allHotels");
-						HttpURLConnection conn = null;
-						conn = (HttpURLConnection) url.openConnection();
-						conn.setUseCaches(false);
-						conn.setDoInput(true);
-						conn.setDoOutput(true);
-						conn.setRequestMethod("GET");
+					protected Void call() {
+						try {
+							URL url = new URL(Main.prop.getProperty("REMOTE")+"/allHotels");
+							HttpURLConnection conn = null;
+							conn = (HttpURLConnection) url.openConnection();
+							conn.setUseCaches(false);
+							conn.setDoInput(true);
+							conn.setDoOutput(true);
+							conn.setRequestMethod("GET");
+							
+							conn.getInputStream();
+							BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+					    	
+							JsonFactory fac2 = new JsonFactory();
+							JsonParser jp2 = fac2.createParser(in);
+							Hotel[] arr = new ObjectMapper().readValue(jp2, Hotel[].class);
+							list =  FXCollections.observableArrayList(Arrays.asList(arr));
+						} catch(IOException e) {
+							LOG.log(Level.SEVERE, "Pripojenie k serveru neuspesne", e);
+						}
 						
-						conn.getInputStream();
-						BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				    	
-						JsonFactory fac2 = new JsonFactory();
-						JsonParser jp2 = fac2.createParser(in);
-						Hotel[] arr = new ObjectMapper().readValue(jp2, Hotel[].class);
-						list =  FXCollections.observableArrayList(Arrays.asList(arr));
 
 						for (Hotel hotel : list) {
 							hotel.setRooms_count(hotel.getRooms().size());
