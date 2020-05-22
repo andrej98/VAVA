@@ -8,7 +8,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonFactory;
@@ -209,45 +209,48 @@ public class GuestHomeScreen {
 	    	
 	    	filterList.clear();
 	    	
-	    	URL url = new URL(sb.toString());
-			HttpURLConnection conn = null;
-			conn = (HttpURLConnection) url.openConnection();
-			conn.setUseCaches(false);
-			conn.setDoInput(true);
-			conn.setDoOutput(true);
-			conn.setRequestMethod("GET");
-			
-			conn.getInputStream();
-			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-	    	
-			JsonFactory fac2 = new JsonFactory();
-			JsonParser jp2 = fac2.createParser(in);
-			Hotel[] arr = new ObjectMapper().readValue(jp2, Hotel[].class);
-			filterList =  FXCollections.observableArrayList(Arrays.asList(arr));
-
-			for (Hotel hotel : filterList) {
-				int count = 0;
-				for(Room room : hotel.getRooms()) {
-					if((priceS.getValue() != 0 && room.getPrice()<=priceS.getValue()) && (bedsS.getValue() != 0 && room.getBeds()==bedsS.getValue())) 
-						count++;
-					else if(priceS.getValue() ==0 && bedsS.getValue() == 0)
-						count++;
-					else if(priceS.getValue() == 0 && bedsS.getValue() != 0 && bedsS.getValue()==room.getBeds())
-						count++;
-					else if(bedsS.getValue() == 0 && priceS.getValue() != 0 && priceS.getValue()>=room.getPrice())
-						count++;
+	    	try {
+	    		URL url = new URL(sb.toString());
+				HttpURLConnection conn = null;
+				conn = (HttpURLConnection) url.openConnection();
+				conn.setUseCaches(false);
+				conn.setDoInput(true);
+				conn.setDoOutput(true);
+				conn.setRequestMethod("GET");
 				
-				}
-				hotel.setRooms_count(count);
-			}
-			
-            table.setItems(filterList);
+				conn.getInputStream();
+				BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+		    	
+				JsonFactory fac2 = new JsonFactory();
+				JsonParser jp2 = fac2.createParser(in);
+				Hotel[] arr = new ObjectMapper().readValue(jp2, Hotel[].class);
+				filterList =  FXCollections.observableArrayList(Arrays.asList(arr));
 
-		
+				for (Hotel hotel : filterList) {
+					int count = 0;
+					for(Room room : hotel.getRooms()) {
+						if((priceS.getValue() != 0 && room.getPrice()<=priceS.getValue()) && (bedsS.getValue() != 0 && room.getBeds()==bedsS.getValue())) 
+							count++;
+						else if(priceS.getValue() ==0 && bedsS.getValue() == 0)
+							count++;
+						else if(priceS.getValue() == 0 && bedsS.getValue() != 0 && bedsS.getValue()==room.getBeds())
+							count++;
+						else if(bedsS.getValue() == 0 && priceS.getValue() != 0 && priceS.getValue()>=room.getPrice())
+							count++;
+					
+					}
+					hotel.setRooms_count(count);
+				}
+				
+	            table.setItems(filterList);
+	            table.getSelectionModel().selectFirst();
+	        	pocetHotelov = filterList.size();
+	        	upovedomSledovatelov(pocetHotelov);
+
+	    	} catch(IOException e) {
+	    		LOG.log(Level.SEVERE, "Nepodarilo sa pripojit k serveru", e);
+	    	}
     	}
-    	table.getSelectionModel().selectFirst();
-    	pocetHotelov = filterList.size();
-    	upovedomSledovatelov(pocetHotelov);
     }
   
     //navrat na login obrazovku

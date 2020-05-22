@@ -4,12 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 import org.json.simple.parser.ParseException;
 
@@ -37,7 +34,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import model.Hotel;
 import model.HotelManager;
-import model.Room;
 
 
 /**
@@ -102,7 +98,7 @@ public class ManagerHomeScreen {
   
     //prejde na obrazovku pridania noveho hotela
     @FXML
-    void addClick(ActionEvent event) throws IOException, SQLException {
+    void addClick(ActionEvent event) throws IOException {
     	FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/AddHotelScreen.fxml"));
     	loader.setResources(Main.bundle);
 		Parent root = loader.load();
@@ -116,7 +112,7 @@ public class ManagerHomeScreen {
     
     //navrat na obrazovku prihlasenia
     @FXML
-    void logoutClick(ActionEvent event) throws IOException, SQLException {
+    void logoutClick(ActionEvent event) throws IOException {
     	Parent root = FXMLLoader.load(ManagerHomeScreen.class.getResource("/gui/HomeScreen.fxml"),Main.bundle);
 		Scene registerScene = new Scene(root);
 		Stage window = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -126,7 +122,7 @@ public class ManagerHomeScreen {
     
     //vymazanie hotela z databazy
     @FXML
-    void removeClick(ActionEvent event) throws SQLException, IOException, ParseException {
+    void removeClick(ActionEvent event) throws IOException, ParseException {
     	if(!hotels.isEmpty()) {
     		Hotel selected = table.getSelectionModel().getSelectedItem();
         		
@@ -136,38 +132,43 @@ public class ManagerHomeScreen {
 
     		    	if (alert.getResult() == ButtonType.YES) {
     		    		
-    		    		URL url = new URL(Main.prop.getProperty("REMOTE")+"/hotel/delete/"+selected.getHotel_id());
-    		    		HttpURLConnection conn = null;
-    		    		conn = (HttpURLConnection) url.openConnection();
-    		    		conn.setDoOutput(true);
-    		    		conn.setRequestProperty(
-    		    		    "Content-Type", "application/x-www-form-urlencoded" );
-    		    		conn.setRequestMethod("DELETE");
-    		    		conn.connect();   	
-    		    		conn.getInputStream();
+    		    		try {
+    		    			URL url = new URL(Main.prop.getProperty("REMOTE")+"/hotel/delete/"+selected.getHotel_id());
+        		    		HttpURLConnection conn = null;
+        		    		conn = (HttpURLConnection) url.openConnection();
+        		    		conn.setDoOutput(true);
+        		    		conn.setRequestProperty(
+        		    		    "Content-Type", "application/x-www-form-urlencoded" );
+        		    		conn.setRequestMethod("DELETE");
+        		    		conn.connect();   	
+        		    		conn.getInputStream();
+        		    		
+        		    		//table.getItems().remove(selected);
+        					
+        		    		URL url2 = new URL(Main.prop.getProperty("REMOTE")+"/manager/"+manager.getManager_id());
+        		    		System.out.print(url2);
+        		    		HttpURLConnection conn2 = null;
+        					conn2 = (HttpURLConnection) url2.openConnection();
+        					conn2.setUseCaches(false);
+        					conn2.setDoInput(true);
+        					conn2.setDoOutput(true);
+        					conn2.setRequestMethod("GET");
+        					
+        					conn2.getInputStream();
+        					BufferedReader in2 = new BufferedReader(new InputStreamReader(conn2.getInputStream()));
+        					
+        					JsonFactory fac2 = new JsonFactory();
+        					JsonParser jp2 = fac2.createParser(in2);
+        					ObjectMapper om2 = new ObjectMapper();
+        					HotelManager man = new HotelManager();
+        					man = om2.readValue(jp2, HotelManager.class);
+        					this.manager=man;
+        					this.init(man);
+        					in2.close();
+    		    		} catch(IOException e) {
+    		    			LOG.log(Level.SEVERE, "Nepodarilo sa pripojit k serveru", e);
+    		    		}
     		    		
-    		    		//table.getItems().remove(selected);
-    					
-    		    		URL url2 = new URL(Main.prop.getProperty("REMOTE")+"/manager/"+manager.getManager_id());
-    		    		System.out.print(url2);
-    		    		HttpURLConnection conn2 = null;
-    					conn2 = (HttpURLConnection) url2.openConnection();
-    					conn2.setUseCaches(false);
-    					conn2.setDoInput(true);
-    					conn2.setDoOutput(true);
-    					conn2.setRequestMethod("GET");
-    					
-    					conn2.getInputStream();
-    					BufferedReader in2 = new BufferedReader(new InputStreamReader(conn2.getInputStream()));
-    					
-    					JsonFactory fac2 = new JsonFactory();
-    					JsonParser jp2 = fac2.createParser(in2);
-    					ObjectMapper om2 = new ObjectMapper();
-    					HotelManager man = new HotelManager();
-    					man = om2.readValue(jp2, HotelManager.class);
-    					this.manager=man;
-    					this.init(man);
-    					
     		    	}
     	}
     }
@@ -208,7 +209,5 @@ public class ManagerHomeScreen {
     		window.setScene(login);
     		window.show();
         }
-    	
     }
-    
 }

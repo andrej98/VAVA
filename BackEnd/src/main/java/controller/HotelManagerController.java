@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import model.Customer;
 import model.HotelManager;
-import service.CustomerService;
 import service.HotelManagerService;
 
 @RestController

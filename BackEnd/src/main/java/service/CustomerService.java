@@ -6,8 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import model.Customer;
-import model.Hotel;
-import model.HotelManager;
 import repository.CustomerRepository;
 
 @Service

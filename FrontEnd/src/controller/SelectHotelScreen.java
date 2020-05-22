@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.json.simple.parser.ParseException;
@@ -153,36 +154,42 @@ public class SelectHotelScreen {
 
     		    	if (alert.getResult() == ButtonType.YES) {
     		    		
-    		    		URL url = new URL(Main.prop.getProperty("REMOTE")+"/room/delete/"+selected.getRoom_id());
-    		    		HttpURLConnection conn = null;
-    		    		conn = (HttpURLConnection) url.openConnection();
-    		    		conn.setDoOutput(true);
-    		    		conn.setRequestProperty(
-    		    		    "Content-Type", "application/x-www-form-urlencoded" );
-    		    		conn.setRequestMethod("DELETE");
-    		    		conn.connect();   	
-    		    		conn.getInputStream();
+    		    		try {
+    		    			URL url = new URL(Main.prop.getProperty("REMOTE")+"/room/delete/"+selected.getRoom_id());
+        		    		HttpURLConnection conn = null;
+        		    		conn = (HttpURLConnection) url.openConnection();
+        		    		conn.setDoOutput(true);
+        		    		conn.setRequestProperty(
+        		    		    "Content-Type", "application/x-www-form-urlencoded" );
+        		    		conn.setRequestMethod("DELETE");
+        		    		conn.connect();   	
+        		    		conn.getInputStream();
+        		    		
+        		    		table.getItems().remove(selected);
+        					
+        		    		URL url2 = new URL(Main.prop.getProperty("REMOTE")+"/manager/"+manager.getManager_id());
+        		    		System.out.print(url2);
+        		    		HttpURLConnection conn2 = null;
+        					conn2 = (HttpURLConnection) url2.openConnection();
+        					conn2.setUseCaches(false);
+        					conn2.setDoInput(true);
+        					conn2.setDoOutput(true);
+        					conn2.setRequestMethod("GET");
+        					
+        					conn2.getInputStream();
+        					BufferedReader in2 = new BufferedReader(new InputStreamReader(conn2.getInputStream()));
+        					
+        					JsonFactory fac2 = new JsonFactory();
+        					JsonParser jp2 = fac2.createParser(in2);
+        					ObjectMapper om2 = new ObjectMapper();
+        					HotelManager man = new HotelManager();
+        					man = om2.readValue(jp2, HotelManager.class);
+        					this.manager=man;
+        					in2.close();
+    		    		} catch(IOException e) {
+    		    			LOG.log(Level.SEVERE, "Nepodarilo sa pripojit k serveru", e);
+    		    		}
     		    		
-    		    		table.getItems().remove(selected);
-    					
-    		    		URL url2 = new URL(Main.prop.getProperty("REMOTE")+"/manager/"+manager.getManager_id());
-    		    		System.out.print(url2);
-    		    		HttpURLConnection conn2 = null;
-    					conn2 = (HttpURLConnection) url2.openConnection();
-    					conn2.setUseCaches(false);
-    					conn2.setDoInput(true);
-    					conn2.setDoOutput(true);
-    					conn2.setRequestMethod("GET");
-    					
-    					conn2.getInputStream();
-    					BufferedReader in2 = new BufferedReader(new InputStreamReader(conn2.getInputStream()));
-    					
-    					JsonFactory fac2 = new JsonFactory();
-    					JsonParser jp2 = fac2.createParser(in2);
-    					ObjectMapper om2 = new ObjectMapper();
-    					HotelManager man = new HotelManager();
-    					man = om2.readValue(jp2, HotelManager.class);
-    					this.manager=man;
     		    	}
     	}
     	

@@ -77,7 +77,8 @@ public class AddHotelScreen {
     }
 
     //pridanie hotela do databazy
-    @FXML
+    @SuppressWarnings("unchecked")
+	@FXML
     void addClick(ActionEvent event) throws ParseException {  
     	JSONObject json = new JSONObject();
 
@@ -134,8 +135,9 @@ public class AddHotelScreen {
     			HotelManager mana = new HotelManager();
     			mana= om.readValue(jp, HotelManager.class);
     			this.manager=mana;
+    			in.close();
     			
-        		backCLick(event);
+        		backClick(event);
         	} catch(IOException e) {
         		Alert a = new Alert(AlertType.ERROR);
         		a.setTitle(Main.bundle.getString("error"));
@@ -150,7 +152,7 @@ public class AddHotelScreen {
 
     //navrat na predoslu obrazovku
     @FXML
-    void backCLick(ActionEvent event) throws IOException, ParseException {
+    void backClick(ActionEvent event) throws IOException, ParseException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ManagerHomeScreen.fxml"));
 		loader.setResources(Main.bundle);
     	Parent root=loader.load();

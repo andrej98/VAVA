@@ -13,8 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import model.Hotel;
-import repository.HotelRepository;
-
 
 import service.HotelService;
 
@@ -23,9 +21,6 @@ public class HotelController {
 
 	@Autowired
 	private HotelService hotelService;
-	@Autowired
-	private HotelRepository hotelR;
-
 	
 	//GET
 	@RequestMapping(value = "/allHotels", method = RequestMethod.GET)

@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import model.Payment;
-import model.Reservation;
 import service.PaymentService;
 
 @RestController

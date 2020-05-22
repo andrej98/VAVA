@@ -94,7 +94,8 @@ public class EditHotelScreen {
     }
 
     //aktualizacia hotela cez transakciu
-    @FXML
+    @SuppressWarnings("unchecked")
+	@FXML
     void editClick(ActionEvent event) throws ParseException  {
     	JSONObject json = new JSONObject();
 
@@ -107,7 +108,6 @@ public class EditHotelScreen {
     	json.put("hotel_id", this.hotel.getHotel_id());
     	
     	
-    	System.out.println(json.toJSONString());
     	if (nameTF.getText().isEmpty() || addressTF.getText().isEmpty() || cityTF.getText().isEmpty() || countryTF.getText().isEmpty())
         {
         	Alert a = new Alert(AlertType.ERROR);
@@ -151,6 +151,7 @@ public class EditHotelScreen {
     			HotelManager man = new HotelManager();
     			man = om2.readValue(jp2, HotelManager.class);
     			this.manager=man;
+        		in2.close();
         		
         		backClick(event);
     		}catch (IOException e) {

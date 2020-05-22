@@ -60,10 +60,10 @@ public class RegistrationScreen {
 
     
     //pridanie noveho pouzivatela medzi customerov alebo managerov, podla volby
-    @FXML
+    @SuppressWarnings("unchecked")
+	@FXML
     void registerClick(ActionEvent event) {
     	
-        String q1 = new String();
 		if (bdateTB.getValue() == null || fnameTB.getText().isEmpty() || lnameTB.getText().isEmpty() || addressTB.getText().isEmpty() || emailTB.getText().isEmpty() || passwordTB.getText().isEmpty())
         {
         	Alert a = new Alert(AlertType.ERROR);

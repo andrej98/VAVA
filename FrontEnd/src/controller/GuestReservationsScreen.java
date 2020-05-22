@@ -9,7 +9,6 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -92,7 +91,6 @@ public class GuestReservationsScreen {
     private Customer c;
     private ObservableList<Reservation> data;
 	private final static Logger LOG = Logger.getLogger(GuestReservationsScreen.class.getName());
-    private int first = 0;
     
     //inicializacia obrazovky
     public void init(Customer c) {
@@ -116,6 +114,7 @@ public class GuestReservationsScreen {
 			JsonParser jp2 = fac2.createParser(in);
 			Reservation[] arr = new ObjectMapper().readValue(jp2, Reservation[].class);
 			data =  FXCollections.observableArrayList(Arrays.asList(arr));
+			in.close();
 		} catch(IOException e) {
 			LOG.log(Level.SEVERE, "Pripojenie k serveru neuspesne", e);
 		}
@@ -215,7 +214,7 @@ public class GuestReservationsScreen {
         	document.add(new Paragraph(this.nameL.getText()));
         	
         	for(int i=0;i<table.getColumns().toArray().length;i++) {
-        		TableColumn col = table.getColumns().get(i);
+        		TableColumn<Reservation, ?> col = table.getColumns().get(i);
             	int row = table.getSelectionModel().getSelectedIndex();
             	String text = col.getCellData(row).toString();
             	
@@ -259,7 +258,8 @@ public class GuestReservationsScreen {
     }
 
     //vytvori zaznam v tabulke payment, priradey k danej rezervacii, v tabulke sa aktualizuje stav na paid
-    @FXML
+    @SuppressWarnings("unchecked")
+	@FXML
     void payClick(ActionEvent event) {
     	if(!data.isEmpty()) {      	
         	Reservation selected = table.getSelectionModel().getSelectedItem();

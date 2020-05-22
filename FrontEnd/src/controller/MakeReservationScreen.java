@@ -1,19 +1,15 @@
 package controller;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalDate;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.json.simple.JSONObject;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,7 +25,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import model.Customer;
 import model.Hotel;
-import model.HotelManager;
 import model.Room;
 
 /**
@@ -59,11 +54,7 @@ public class MakeReservationScreen {
     	this.room_id=room_id;
     	this.c=c;
     	this.hotel_id = hotel_id;
-    	
-    	
-        nameL.setText(c.getName());
-    	
-    	
+        nameL.setText(c.getName());  	
     }
 
     //navrat na predoslu obrazovku
@@ -83,7 +74,8 @@ public class MakeReservationScreen {
     }
 
     //vytvori zaznam v tabulke rezervacii
-    @FXML
+    @SuppressWarnings("unchecked")
+	@FXML
     void reservationClick(ActionEvent event) throws IOException {
     	LocalDate in = inDate.getValue();
     	LocalDate out = outDate.getValue();
@@ -105,25 +97,28 @@ public class MakeReservationScreen {
         	json.put("room", this.room_id.getRoom_id());
         	System.out.println(json.toJSONString());
         	
-        	URL url = new URL(Main.prop.getProperty("REMOTE")+"/reservation/save");
-    		HttpURLConnection conn = null;
-    		conn = (HttpURLConnection) url.openConnection();
-    		conn.setUseCaches(false);
-    		conn.setDoInput(true);
-    		conn.setDoOutput(true);
-    		conn.setRequestMethod("POST");
-    		conn.setRequestProperty("Content-Type", "application/json");
-    		OutputStreamWriter output = new OutputStreamWriter(conn.getOutputStream());
-    		output.write(json.toString());
-    		output.close();
-    		conn.getInputStream();
-    		conn.disconnect();
-    		Alert a = new Alert(AlertType.CONFIRMATION);
-    		a.setTitle(Main.bundle.getString("confirm"));
-    		a.setContentText(Main.bundle.getString("confirmRes"));
-    		a.showAndWait();
-    		
-    		
+        	try {
+        		URL url = new URL(Main.prop.getProperty("REMOTE")+"/reservation/save");
+        		HttpURLConnection conn = null;
+        		conn = (HttpURLConnection) url.openConnection();
+        		conn.setUseCaches(false);
+        		conn.setDoInput(true);
+        		conn.setDoOutput(true);
+        		conn.setRequestMethod("POST");
+        		conn.setRequestProperty("Content-Type", "application/json");
+        		OutputStreamWriter output = new OutputStreamWriter(conn.getOutputStream());
+        		output.write(json.toString());
+        		output.close();
+        		conn.getInputStream();
+        		conn.disconnect();
+        		Alert a = new Alert(AlertType.CONFIRMATION);
+        		a.setTitle(Main.bundle.getString("confirm"));
+        		a.setContentText(Main.bundle.getString("confirmRes"));
+        		a.showAndWait();
+        	} catch(IOException e) {
+        		LOG.log(Level.SEVERE, "Nepodarilo sa pripojit k serveru", e);
+        	}
+        	   		
     		backClick(event);
     	}
     }

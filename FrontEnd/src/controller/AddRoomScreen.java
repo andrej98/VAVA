@@ -84,7 +84,8 @@ public class AddRoomScreen {
     }
     
     //pridanie izby do databazy
-    @FXML
+    @SuppressWarnings("unchecked")
+	@FXML
     void addClick(ActionEvent event) throws IOException {    	
     	Boolean heating,bathroom;
     	if (heatingCB.getValue().equalsIgnoreCase(Main.bundle.getString("yes")))
@@ -143,6 +144,7 @@ public class AddRoomScreen {
 			Hotel h = new Hotel();
 			h= om.readValue(jp, Hotel.class);
 			this.hotel=h;
+			in.close();
 			
     		URL url2 = new URL(Main.prop.getProperty("REMOTE")+"/manager/"+manager.getManager_id());
     		System.out.print(url2);
@@ -164,6 +166,7 @@ public class AddRoomScreen {
 			this.manager=man;
     		
     		backClick(event);
+    		in2.close();
     	} catch(IOException e) {
     		Alert a = new Alert(AlertType.ERROR);
     		a.setTitle(Main.bundle.getString("error"));

@@ -4,7 +4,6 @@ package controller;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
@@ -123,7 +122,7 @@ public class HomeScreen implements Initializable{
 	    			ObjectMapper om = new ObjectMapper();
 	    			HotelManager mana = new HotelManager();
 	    			mana= om.readValue(jp, HotelManager.class);
-	    			
+	    			in.close();
 	    			
 	    			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/ManagerHomeScreen.fxml"));
 	    			loader.setResources(Main.bundle);
@@ -149,7 +148,7 @@ public class HomeScreen implements Initializable{
 					
 					conn.getInputStream();
 					BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-
+					
 					
 					JsonFactory fac = new JsonFactory();
 	    			JsonParser jp = fac.createParser(in);
@@ -160,6 +159,7 @@ public class HomeScreen implements Initializable{
 	    			FXMLLoader loader = new FXMLLoader(getClass().getResource("/gui/GuestHomeScreen.fxml"));
 	    			loader.setResources(Main.bundle);
 
+	    			in.close();
 	    			Parent root=loader.load();
 	    			GuestHomeScreen m = loader.getController();
 	    			m.init(cus,list);
@@ -266,6 +266,7 @@ public class HomeScreen implements Initializable{
 							JsonParser jp2 = fac2.createParser(in);
 							Hotel[] arr = new ObjectMapper().readValue(jp2, Hotel[].class);
 							list =  FXCollections.observableArrayList(Arrays.asList(arr));
+							in.close();
 						} catch(IOException e) {
 							LOG.log(Level.SEVERE, "Pripojenie k serveru neuspesne", e);
 						}
@@ -280,8 +281,7 @@ public class HomeScreen implements Initializable{
 				    		if(iter.next().getRooms_count()==0)
 				    			iter.remove();
 				    	}
-						
-											
+																
 						return null;
 					}
 				};
@@ -305,7 +305,6 @@ public class HomeScreen implements Initializable{
 	    		LOG.log(Level.SEVERE, "Zla cesta k suboru", e);
 			}
         	thread.start();
-        }
-        
+        }   
     }
 }

@@ -20,7 +20,7 @@
       <Label fx:id="text3" layoutX="43.0" layoutY="150.0" text="%addressC" />
       <Label fx:id="text4" layoutX="43.0" layoutY="216.0" text="%starsC" />
       <Button fx:id="addB" layoutX="47.0" layoutY="302.0" mnemonicParsing="false" onAction="#addClick" text="%addB" />
-      <Button fx:id="backB" layoutX="124.0" layoutY="302.0" mnemonicParsing="false" onAction="#backCLick" text="%backB" />
+      <Button fx:id="backB" layoutX="124.0" layoutY="302.0" mnemonicParsing="false" onAction="#backClick" text="%backB" />
       <TextField fx:id="cityTB" layoutX="282.0" layoutY="115.0" />
       <TextField fx:id="countryTB" layoutX="282.0" layoutY="174.0" />
       <Label fx:id="text5" layoutX="282.0" layoutY="89.0" text="%cityC" />
