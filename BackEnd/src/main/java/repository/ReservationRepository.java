@@ -19,7 +19,7 @@ public interface ReservationRepository extends JpaRepository<Reservation,Integer
 			+ "room.price, "
 			+ "CASE WHEN (payment is NULL) "
 			+ "THEN 'no' "
-			+ "ELSE 'yes' END AS paid ) "
+			+ "ELSE 'yes' END AS paid ,room.room_id ) "
 			+ "FROM Hotel hotel "
 			+ "JOIN hotel.rooms room "
 			+ "JOIN room.reservation reservation "

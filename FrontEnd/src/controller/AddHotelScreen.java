@@ -134,7 +134,7 @@ public class AddHotelScreen {
     			HotelManager mana = new HotelManager();
     			mana= om.readValue(jp, HotelManager.class);
     			this.manager=mana;
-        		
+    			
         		backCLick(event);
         	} catch(IOException e) {
         		Alert a = new Alert(AlertType.ERROR);

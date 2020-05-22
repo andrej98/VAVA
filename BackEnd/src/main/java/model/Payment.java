@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 @Entity
 @Table(name="payment")
@@ -18,16 +19,16 @@ public class Payment {
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int payment_id;
-	@JsonIgnore
+	
 	@OneToOne
 	@JoinColumn(name="reservation_id")
-	private Reservation reservation;
+	private Reservation reservation_id;
 	private int amount;
 	private Date date_of_payment;
 	
 	public Payment(Reservation reservation, int amount, Date date_of_payment) {
 		super();
-		this.reservation = reservation;
+		this.reservation_id = reservation;
 		this.amount = amount;
 		this.date_of_payment = date_of_payment;
 	}
@@ -42,13 +43,13 @@ public class Payment {
 	public void setPayment_id(int payment_id) {
 		this.payment_id = payment_id;
 	}
-
-	public Reservation getReservation() {
-		return reservation;
+	@JsonIgnore
+	public Reservation getReservation_id() {
+		return reservation_id;
 	}
-
+	@JsonProperty
 	public void setReservation_id(Reservation reservation) {
-		this.reservation = reservation;
+		this.reservation_id = reservation;
 	}
 
 	public int getAmount() {

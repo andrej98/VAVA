@@ -20,7 +20,7 @@ public class Room {
 	private int beds;
 	private int price;
 	@JsonIgnore
-	@OneToMany(mappedBy="room")
+	@OneToMany(mappedBy="room_id")
 	private List<Reservation> reservation;
 	@ManyToOne
 	@JoinColumn(name="hotel_id", nullable = false)
@@ -34,6 +34,10 @@ public class Room {
 	public Room() {
 		
 	}
+	public Room(int id) {
+		this.room_id=id;
+	}
+	
 	
 	public Room(int beds, int price, Hotel hotel, boolean bathroom, boolean heating) {
 		super();

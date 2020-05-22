@@ -31,6 +31,11 @@ public class Customer {
 	public Customer(){
 	}
 	
+	public Customer(int id){
+		this.customer_id=id;
+	}
+	
+	
 	public Customer(String first_name, String last_name, String email, String password, Date birth_date,
 			char gender, String address) {
 		super();

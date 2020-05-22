@@ -17,6 +17,8 @@ public class ReservationDTO {
 	private Date checkout_date;
 	private int price;
 	private String paid;
+	private int room_id;
+
 	
 	public ReservationDTO() {
 		
@@ -112,7 +114,7 @@ public class ReservationDTO {
 
 	public ReservationDTO(int reservation_id, String hotel_name, String address,
 			String city, String country, int stars, int beds, Date checkin_date, Date checkout_date, 
-			 int price, String paid) {
+			 int price, String paid,int room_id) {
 		this.reservation_id = reservation_id;
 		this.checkin_date = checkin_date;
 		this.checkout_date = checkout_date;
@@ -124,6 +126,15 @@ public class ReservationDTO {
 		this.price = price;
 		this.paid = paid;
 		this.beds = beds;
+		this.room_id=room_id;
+	}
+
+	public int getRoom_id() {
+		return room_id;
+	}
+
+	public void setRoom_id(int room_id) {
+		this.room_id = room_id;
 	}
 	
 }

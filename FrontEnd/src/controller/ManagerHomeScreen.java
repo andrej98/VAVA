@@ -167,6 +167,7 @@ public class ManagerHomeScreen {
     					man = om2.readValue(jp2, HotelManager.class);
     					this.manager=man;
     					this.init(man);
+    					
     		    	}
     	}
     }

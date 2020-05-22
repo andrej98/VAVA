@@ -28,12 +28,12 @@ public class Reservation {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="customer_id")
 	private Customer customer;
-	@OneToOne(mappedBy="reservation")
+	@OneToOne(mappedBy="reservation_id")
 	private Payment payment;
 	
 	@ManyToOne
 	@JoinColumn(name="room_id")
-	private Room room;
+	private Room room_id;
 	
 		
 	@JsonIgnore
@@ -47,11 +47,14 @@ public class Reservation {
 
 	
 	public void setRoom(Room room) {
-		this.room = room;
+		this.room_id = room;
 	}
 
 	public Reservation() {
 		
+	}
+	public Reservation(int id) {
+		this.reservation_id=id;
 	}
 	
 	
@@ -59,7 +62,7 @@ public class Reservation {
 		super();
 		this.checkin_date = checkin_date;
 		this.checkout_date = checkout_date;
-		this.room = room;
+		this.room_id = room;
 		this.customer = customer;
 	}
 
@@ -87,12 +90,12 @@ public class Reservation {
 		this.checkout_date = checkout_date;
 	}
 	@JsonIgnore
-	public Room getRoom() {
-		return room;
+	public Room getRoom_id() {
+		return room_id;
 	}
-	//@JsonProperty
+	@JsonProperty
 	public void setRoom_id(Room room) {
-		this.room = room;
+		this.room_id = room;
 	}
 	@JsonIgnore
 	public Customer getCustomer() {

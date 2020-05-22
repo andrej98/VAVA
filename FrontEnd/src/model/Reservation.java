@@ -16,6 +16,7 @@ public class Reservation {
 	private int price;
 	private String paid;
 	private int beds;
+	private int room_id;
 	
 	public int getBeds() {
 		return beds;
@@ -33,7 +34,7 @@ public class Reservation {
 
 
 	public Reservation(int reservation_id, Date checkin_date, Date checkout_date, String hotel_name, String address,
-			int stars, String city, String country, int price, String paid) {
+			int stars, String city, String country, int price, String paid,int room_id) {
 		super();
 		this.reservation_id = reservation_id;
 		this.checkin_date = checkin_date;
@@ -45,6 +46,18 @@ public class Reservation {
 		this.country = country;
 		this.price = price;
 		this.paid = paid;
+		this.room_id=room_id;
+
+	}
+
+
+	public int getRoom_id() {
+		return room_id;
+	}
+
+
+	public void setRoom_id(int room_id) {
+		this.room_id = room_id;
 	}
 
 
