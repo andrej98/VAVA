@@ -49,7 +49,7 @@ public class MakeReservationScreen {
     	this.hotel_id = hotel_id;
     	
     	
-        
+        nameL.setText(c.getName());
     	
     	
     }

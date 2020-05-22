@@ -21,5 +21,17 @@
 	<classpathentry kind="lib" path="/04/lib/dom4j-1.6.1.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/layout-7.1.11.jar"/>
 	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Vývoj aplikácií s viacvrstvovou architektúrou/VAVA Projekt/FrontEnd/json-simple-1.1.1.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/barcodes-7.1.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/font-asian-7.1.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/forms-7.1.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/hyph-7.1.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/io-7.1.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/pdfa-7.1.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/pdftest-7.1.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/sign-7.1.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/slf4j-api-1.7.30.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/slf4j-simple-1.6.2.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/styled-xml-parser-7.1.11.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Andrej/OneDrive - Slovenská technická univerzita v Bratislave/Pracovná plocha/Databázové systémy/iText PDF/svg-7.1.11.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -40,7 +40,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import model.Customer;
-import model.Hotel;
 import model.Reservation;
 
 /**
@@ -92,27 +91,29 @@ public class GuestReservationsScreen {
     //inicializacia obrazovky
     public void init(Customer c) {
     	this.c = c;
-    	data = FXCollections.observableArrayList(c.getReservations());
-//    	try {
-//			URL url = new URL(Main.prop.getProperty("REMOTE")+"/reservations/"+this.c.getCustomer_id()) ;
-//			HttpURLConnection conn = null;
-//			conn = (HttpURLConnection) url.openConnection();
-//			conn.setUseCaches(false);
-//			conn.setDoInput(true);
-//			conn.setDoOutput(true);
-//			conn.setRequestMethod("GET");
-//			
-//			conn.getInputStream();
-//			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-//	    	
-//			JsonFactory fac2 = new JsonFactory();
-//			JsonParser jp2 = fac2.createParser(in);
-//			Reservation[] arr = new ObjectMapper().readValue(jp2, Reservation[].class);
-//			data =  FXCollections.observableArrayList(Arrays.asList(arr));
-//		} catch(IOException e) {
-//			LOG.log(Level.SEVERE, "Pripojenie k serveru neuspesne", e);
-//		}
-//    	
+
+    	nameL.setText(c.getName());
+    	try {
+			URL url = new URL(Main.prop.getProperty("REMOTE")+"/reservations/"+this.c.getCustomer_id());
+			System.out.println(url);
+			HttpURLConnection conn = null;
+			conn = (HttpURLConnection) url.openConnection();
+			conn.setUseCaches(false);
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
+			conn.setRequestMethod("GET");
+			
+			conn.getInputStream();
+			BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+	    	
+			JsonFactory fac2 = new JsonFactory();
+			JsonParser jp2 = fac2.createParser(in);
+			Reservation[] arr = new ObjectMapper().readValue(jp2, Reservation[].class);
+			data =  FXCollections.observableArrayList(Arrays.asList(arr));
+		} catch(IOException e) {
+			LOG.log(Level.SEVERE, "Pripojenie k serveru neuspesne", e);
+		}
+    	
         hotelC.setCellValueFactory(new PropertyValueFactory<>("hotel_name"));
         addressC.setCellValueFactory(new PropertyValueFactory<>("address"));
         cityC.setCellValueFactory(new PropertyValueFactory<>("city"));
@@ -123,11 +124,11 @@ public class GuestReservationsScreen {
         checkinC.setCellValueFactory(new PropertyValueFactory<>("checkin_date"));
         checkoutC.setCellValueFactory(new PropertyValueFactory<>("checkout_date"));
         bedsC.setCellValueFactory(new PropertyValueFactory<>("beds"));
-//        priceC.setCellValueFactory(new PropertyValueFactory<>("price"));
-//        paidC.setCellValueFactory(new PropertyValueFactory<>("paid"));
+        priceC.setCellValueFactory(new PropertyValueFactory<>("price"));
+        paidC.setCellValueFactory(new PropertyValueFactory<>("paid"));
         
         table.setItems(data);
-    	
+    	table.getSelectionModel().selectFirst();
     }
    
     
@@ -159,7 +160,7 @@ public class GuestReservationsScreen {
     void pdfClick(ActionEvent event) throws FileNotFoundException {
     	if(!data.isEmpty()) {
     		FileChooser fileChooser = new FileChooser();
-        	File defaultDir = new File("pdf");
+        	File defaultDir = new File("generated_pdf");
         	fileChooser.setInitialDirectory(defaultDir);
         	fileChooser.setInitialFileName("reservation.pdf");
         	File selectedFile = fileChooser.showSaveDialog(null);
@@ -169,7 +170,7 @@ public class GuestReservationsScreen {
         	pdfDocument.setTagged();
         	Document document = new Document(pdfDocument);
         	document.add(new Paragraph(this.nameL.getText()));
-
+        	
         	for(int i=0;i<table.getColumns().toArray().length;i++) {
         		TableColumn col = table.getColumns().get(i);
             	int row = table.getSelectionModel().getSelectedIndex();

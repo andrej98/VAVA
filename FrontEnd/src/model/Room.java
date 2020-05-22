@@ -63,5 +63,13 @@ public class Room {
 	public void setHeating(boolean heating) {
 		this.heating = heating;
 	}
+
+	public List<Reservation> getReservation() {
+		return reservation;
+	}
+
+	public void setReservation(List<Reservation> reservation) {
+		this.reservation = reservation;
+	}
 	
 }

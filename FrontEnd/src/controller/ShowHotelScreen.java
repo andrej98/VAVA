@@ -58,7 +58,7 @@ public class ShowHotelScreen {
     @FXML
     private Label text;
     
-    private ObservableList<Room> rooms = FXCollections.observableArrayList();
+    private ObservableList<Room> rooms;
 	private final static Logger LOG = Logger.getLogger(ShowHotelScreen.class.getName());
     private Hotel hotel;
     private Customer customer;
@@ -68,12 +68,23 @@ public class ShowHotelScreen {
         this.hotel = hotel;
         this.customer = c;
                 
-        table.getSelectionModel().selectFirst();
+        rooms = FXCollections.observableArrayList(hotel.getRooms());
+        
+        hnameL.setText(Main.bundle.getString("hotelC")+": " +hotel.getHotel_name());
+    	unameL.setText(customer.getName());
+    	addressL.setText(Main.bundle.getString("addressC") +": " + hotel.getAddress());
+    	starsL.setText(Main.bundle.getString("starsC") +": "+ hotel.getStars());
+    	cityL.setText(Main.bundle.getString("cityC") +": "+ hotel.getCity());
+    	countryL.setText(Main.bundle.getString("countryC") +": "+ hotel.getCountry());
         
         priceC.setCellValueFactory(new PropertyValueFactory<>("price"));
         heatingC.setCellValueFactory(new PropertyValueFactory<>("heating"));
         bathroomC.setCellValueFactory(new PropertyValueFactory<>("bathroom"));
         bedsC.setCellValueFactory(new PropertyValueFactory<>("beds"));
+        
+        table.setItems(rooms);
+        table.getSelectionModel().selectFirst();
+
         
     }
     

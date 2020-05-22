@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,7 +26,7 @@ public class Reservation {
 	private Date checkout_date;
 	
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name="customer_id", nullable=false)
+	@JoinColumn(name="customer_id")
 	private Customer customer;
 	@OneToOne(mappedBy="reservation")
 	private Payment payment;
@@ -34,9 +35,25 @@ public class Reservation {
 	@JoinColumn(name="room_id")
 	private Room room;
 	
+		
+	@JsonIgnore
+	public Payment getPayment() {
+		return payment;
+	}
+	//@JsonIgnore
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
+	
+	public void setRoom(Room room) {
+		this.room = room;
+	}
+
 	public Reservation() {
 		
 	}
+	
 	
 	public Reservation(Date checkin_date, Date checkout_date, Room room, Customer customer) {
 		super();
@@ -69,7 +86,7 @@ public class Reservation {
 	public void setCheckout_date(Date checkout_date) {
 		this.checkout_date = checkout_date;
 	}
-	//@JsonIgnore
+	@JsonIgnore
 	public Room getRoom() {
 		return room;
 	}
