@@ -239,9 +239,10 @@ public class HomeScreen implements Initializable{
     	this.guestRB.setToggleGroup(tg);
     	this.managerRB.setToggleGroup(tg);
     	this.langCB.getItems().addAll("EN","SK");
-    	mailTF.setText("a@gmail.com");
-    	hesloTF.setText("a");
+//    	mailTF.setText("a@gmail.com");
+//    	hesloTF.setText("a");
     	
+    	//pocas loading screen nacitavam zoznam hotelov z databazy v druhom threade
     	Service<Void> thread = new Service<Void>() {
 
 			@Override

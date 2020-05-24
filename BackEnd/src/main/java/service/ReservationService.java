@@ -10,12 +10,22 @@ import model.Reservation;
 import model.ReservationDTO;
 import repository.ReservationRepository;
 
+/**
+ * Service pre triedu Reservation
+ * @author Andrej
+ *
+ */
 @Service
 public class ReservationService {
 
 	@Autowired
 	private ReservationRepository reservationR;
 
+	/**
+	 * Vrati zoznam rezervacii pre daneho customera, zaroven vypocita cenu kazdej rezervacie
+	 * @param customer_id
+	 * @return
+	 */
 	public List<ReservationDTO> getAll(int customer_id) {
 		List<ReservationDTO> list = reservationR.getAll(customer_id);
 		for(ReservationDTO r : list) {
@@ -32,10 +42,18 @@ public class ReservationService {
 		return list;
 	}
 
+	/**
+	 * Ulozi novu rezervaciu do databazy
+	 * @param reservation
+	 */
 	public void saveReservation(Reservation reservation) {
 		reservationR.save(reservation);
 	}
 
+	/**
+	 * Zmaze danu rezervaciu z databazy
+	 * @param reservation_id
+	 */
 	public void deleteReservation(int reservation_id) {
 		reservationR.deleteById(reservation_id);
 		

@@ -11,7 +11,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
+/**
+ * Predstavuje tabulku hotel_manager v databaze
+ * @author Andrej
+ *
+ */
 @Entity
 @Table(name="hotel_manager")
 public class HotelManager {

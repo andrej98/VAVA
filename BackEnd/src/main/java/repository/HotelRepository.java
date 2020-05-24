@@ -10,9 +10,25 @@ import org.springframework.stereotype.Repository;
 
 import model.Hotel;
 
+/**
+ * Repository pre triedu HotelManager, dedi od JpaRepository
+ * @author Andrej
+ *
+ */
 @Repository
 public interface HotelRepository extends JpaRepository<Hotel, Integer>, JpaSpecificationExecutor<Hotel> {
 
+	/**
+	 * Sluzi na filtrovanie hotelov podla zadanych kriterii, kriteria su volitelne, ak su nezadane, neberu sa do uvahy. 
+	 * Na filtrovanie pouzivam nativnu query 
+	 * @param hotel_name
+	 * @param city
+	 * @param country
+	 * @param price
+	 * @param beds
+	 * @param stars
+	 * @return Vrati zoznam hotelov splnajucich zadane kriteria
+	 */
 	@Query(value="SELECT manager_id,hotel.hotel_id, hotel_name, address, city, country, stars, COUNT(room.hotel_id) AS rooms_count "
 			+ "FROM hotel LEFT JOIN room ON room.hotel_id = hotel.hotel_id "
 			+ "WHERE (LOWER(hotel_name) LIKE LOWER('%' || :hotel_name || '%')) "

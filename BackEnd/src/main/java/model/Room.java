@@ -14,6 +14,11 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Predstavuje tabulku room v databaze
+ * @author Andrej
+ *
+ */
 @Entity
 @Table(name="room")
 public class Room {

@@ -2,8 +2,11 @@ package model;
 
 import java.util.Date;
 
-
-
+/**
+ * Predstavuje Data transfer object pre rezervaciu, aby som mohol preniest udaje o rezervacii vo formate aky potrebujem
+ * @author Andrej
+ *
+ */
 public class ReservationDTO {
 	
 	private int reservation_id;

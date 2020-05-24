@@ -9,13 +9,21 @@ import org.springframework.web.bind.annotation.RestController;
 import model.Payment;
 import service.PaymentService;
 
+/**
+ * Controller trieda ktora poskytuje REST sluzby pre Payment
+ * @author Andrej
+ *
+ */
 @RestController
 public class PaymentController {
 
 	@Autowired
 	private PaymentService paymentService;
 	
-	//POST 
+	/**
+	 * Pridanie noveho Paymentu, pouziva sa pri platbe za rezervaciu 
+	 * @param payment
+	 */
 	@RequestMapping(value="payment/save", method = RequestMethod.POST)
 	public void savePayment(@RequestBody Payment payment) {
 		paymentService.savePayment(payment);

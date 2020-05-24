@@ -15,6 +15,11 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Predstavuje tabulku reservation v databaze
+ * @author Andrej
+ *
+ */
 @Entity
 @Table(name="reservation")
 public class Reservation {
@@ -23,31 +28,14 @@ public class Reservation {
 	private int reservation_id;
 	private Date checkin_date;
 	private Date checkout_date;
-	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name="customer_id")
 	private Customer customer;
 	@OneToOne(mappedBy="reservation_id")
 	private Payment payment;
-	
 	@ManyToOne
 	@JoinColumn(name="room_id")
 	private Room room_id;
-	
-		
-	@JsonIgnore
-	public Payment getPayment() {
-		return payment;
-	}
-	//@JsonIgnore
-	public void setPayment(Payment payment) {
-		this.payment = payment;
-	}
-
-	
-	public void setRoom(Room room) {
-		this.room_id = room;
-	}
 
 	public Reservation() {
 		
@@ -55,7 +43,6 @@ public class Reservation {
 	public Reservation(int id) {
 		this.reservation_id=id;
 	}
-	
 	
 	public Reservation(Date checkin_date, Date checkout_date, Room room, Customer customer) {
 		super();
@@ -103,6 +90,18 @@ public class Reservation {
 	@JsonProperty
 	public void setCustomer(Customer customer) {
 		this.customer = customer;
+	}
+	@JsonIgnore
+	public Payment getPayment() {
+		return payment;
+	}
+	
+	public void setPayment(Payment payment) {
+		this.payment = payment;
+	}
+
+	public void setRoom(Room room) {
+		this.room_id = room;
 	}
 	
 	

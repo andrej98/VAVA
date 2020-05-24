@@ -13,6 +13,11 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * Predstavuje tabulku payment v databaze
+ * @author Andrej
+ *
+ */
 @Entity
 @Table(name="payment")
 public class Payment {
@@ -67,7 +72,4 @@ public class Payment {
 	public void setDate_of_payment(Date date_of_payment) {
 		this.date_of_payment = date_of_payment;
 	}
-	
-	
-	
 }

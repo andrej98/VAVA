@@ -16,44 +16,74 @@ import model.Hotel;
 
 import service.HotelService;
 
+/**
+ * Controller trieda ktora poskytuje REST sluzby pre Hotel
+ * @author Andrej
+ *
+ */
 @RestController
 public class HotelController {
 
 	@Autowired
 	private HotelService hotelService;
 	
-	//GET
+	/**
+	 * Pouziva sa ked si zakaznik prezera vsetky hotely
+	 * @return Vrati zoznam vsetkych hotelov
+	 */
 	@RequestMapping(value = "/allHotels", method = RequestMethod.GET)
 	public List<Hotel> getAll(){
 		return hotelService.getAll();
 	}
 	
-	//GET
+	/**
+	 * 
+	 * @param hotel_id
+	 * @return Vrati hotel podla hotel_id
+	 */
 	@RequestMapping(value = "/hotel/{hotel_id}", method = RequestMethod.GET)
 	public Hotel getHotel(@PathVariable int hotel_id){
 		return hotelService.getHotel(hotel_id);
 	}
 	
-	//DELETE
+	/**
+	 * Zmaze hotel podla hotel_id
+	 * @param hotel_id
+	 */
 	@RequestMapping(value = "hotel/delete/{hotel_id}", method = RequestMethod.DELETE)
 	public void deleteHotel(@PathVariable int hotel_id) {
 		hotelService.deleteHotel(hotel_id);
 	}
 
 	
-	//POST 
+	/**
+	 * Prida novy hotel 
+	 * @param hotel
+	 */
 	@RequestMapping(value="hotel/save", method = RequestMethod.POST)
 	public void saveHotel(@RequestBody Hotel hotel) {
 		hotelService.saveHotel(hotel);
 	}
 	
-	//PUT
+	/**
+	 * Updatne dany hotel
+	 * @param hotel
+	 */
 	@RequestMapping(value="/hotel/update", method = RequestMethod.PUT)
 	public void updateHotel(@RequestBody Hotel hotel) {
 		hotelService.updateHotel(hotel);
 	}
 	
-	//GET
+	/**
+	 * Sluzi na filtrovanie podla zadanych parametrov, ak nie je nejaky parameter zadany, ta ho ignoruje
+	 * @param hotel_name
+	 * @param city
+	 * @param country
+	 * @param price
+	 * @param beds
+	 * @param stars
+	 * @return Zoznam hotelov splnajucich dane kriteria
+	 */
 	@GetMapping("/hotels")
 	public List<Hotel> filter(  @RequestParam Optional<String> hotel_name, 
 							    @RequestParam Optional<String> city, 

@@ -10,9 +10,19 @@ import org.springframework.stereotype.Repository;
 import model.Reservation;
 import model.ReservationDTO;
 
+/**
+ * Repository pre triedu Reservation, dedi od JpaRepository
+ * @author Andrej
+ *
+ */
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation,Integer>{
 
+	/**
+	 * Vracia zoznam ReservationDTO daneho Customera. Je pouzita JPQL query
+	 * @param customer_id
+	 * @return Vracia zoznam ReservationDTO daneho Customera
+	 */
 	@Query("SELECT new model.ReservationDTO(reservation.reservation_id, "
 			+ "hotel.hotel_name,hotel.address ,hotel.city, hotel.country,hotel.stars,room.beds, "
 			+ "reservation.checkin_date,reservation.checkout_date, "

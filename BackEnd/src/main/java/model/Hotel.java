@@ -15,7 +15,11 @@ import javax.persistence.Table;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-
+/**
+ * Predstavuje tabulku hotel v databaze
+ * @author Andrej
+ *
+ */
 @Entity
 @Table(name="hotel")
 public class Hotel {
@@ -52,8 +56,6 @@ public class Hotel {
 		this.manager_id = manager;
 	}
 	
-	
-
 	@JsonIgnore
 	public HotelManager getManager_id() {
 		return manager_id;

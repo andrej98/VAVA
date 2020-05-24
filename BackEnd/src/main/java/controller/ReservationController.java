@@ -13,26 +13,41 @@ import model.Reservation;
 import model.ReservationDTO;
 import service.ReservationService;
 
+/**
+ * Controller trieda ktora poskytuje REST sluzby pre Reservation
+ * @author Andrej
+ *
+ */
 @RestController
 public class ReservationController {
 
 	@Autowired
 	private ReservationService reservationService;
 	
-	//GET
+	/**
+	 * Vrati vsetky rezervacie daneho Customera 
+	 * @param customer_id
+	 * @return
+	 */
 	@RequestMapping(value = "/reservations/{customer_id}", method = RequestMethod.GET)
 	public List<ReservationDTO> getAll(@PathVariable int customer_id){
 		List<ReservationDTO> list = reservationService.getAll(customer_id);
 		return list;
 	}
 	
-	//DELETE
+	/**
+	 * Zmaze danu rezervaciu
+	 * @param reservation_id
+	 */
 	@RequestMapping(value = "reservation/delete/{reservation_id}", method = RequestMethod.DELETE)
 	public void deleteReservation(@PathVariable int reservation_id) {
 		reservationService.deleteReservation(reservation_id);
 	}
 	
-	//POST 
+	/**
+	 * Prida novu rezervaciu 
+	 * @param reservation
+	 */
 	@RequestMapping(value="reservation/save", method = RequestMethod.POST)
 	public void saveReservation(@RequestBody Reservation reservation) {
 		reservationService.saveReservation(reservation);

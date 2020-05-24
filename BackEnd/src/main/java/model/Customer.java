@@ -10,8 +10,11 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-
-
+/**
+ * Predstavuje tabulku customer v databaze
+ * @author Andrej
+ *
+ */
 @Entity
 @Table(name="customer")
 public class Customer {
